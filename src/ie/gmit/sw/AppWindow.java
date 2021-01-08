@@ -18,28 +18,28 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AppWindow.
+ */
 public class AppWindow extends Application {
+	
+	/** The txt file. */
 	private TextField txtFile; // A control, part of the View and a leaf node.
+	
+	/** The counter. */
+	private int counter = 0;
 
+	/**
+	 * The GUI is based on the Composite Pattern and is a tree of nodes, some of which are composite nodes (containers) and some are leaf nodes (controls). 
+	 * A stage contains 1..n scenes, each of which is a container window for other containers or controls.
+	 *
+	 * @param stage the stage
+	 * @throws Exception the exception
+	 */
 	@Override
-	public void start(Stage stage) throws Exception { // This is a ***Template Method***
+	public void start(Stage stage) throws Exception { 
 
-		/*
-		 * The GUI is based on the ** Composite Pattern ** and is a tree of nodes, some
-		 * of which are composite nodes (containers) and some are leaf nodes (controls).
-		 * A stage contains 1..n scenes, each of which is a container window for other
-		 * containers or controls.
-		 * 
-		 * JavaFX, Android and most GUI frameworks allow the creation of windows using a
-		 * declarative format, typically XML. In the case of JavaFX, the syntax is
-		 * called FXML. The idea of this (which is quite an old one!), is to separate
-		 * the View from the Controller and Model (good practice) and allow
-		 * non-programmers to create Views in XML using SceneBuilder or the equivalent
-		 * that should integrate seamlessly with a suite of controllers and models
-		 * designed by a programmer. In practice, I find that XML slows down development
-		 * to a crawl and I prefer to programme the GUI from scratch, as it's much
-		 * quicker, even if it is verbose.
-		 */
 		stage.setTitle("Daniel Gallagher | G00360986");
 		stage.setWidth(800);
 		stage.setHeight(600);
@@ -89,12 +89,19 @@ public class AppWindow extends Application {
 		stage.centerOnScreen();
 	}
 
-	/*
+	/**
 	 * This method builds a TitledPane containing the controls for the file chooser
 	 * part of the application. We could have created a specialised instance of the
 	 * class TitledPane using inheritance and moved all of the method into its own
 	 * class (OCP).
+	 *
+	 * @param stage the stage
+	 * @return the file chooser pane
+	 * @throws Exception the exception
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws NoClassDefFoundError the no class def found error
 	 */
+	
 	private TitledPane getFileChooserPane(Stage stage) throws Exception, ClassNotFoundException, NoClassDefFoundError {
 		VBox panel = new VBox(); // ** A concrete strategy ***
 
@@ -141,6 +148,15 @@ public class AppWindow extends Application {
 		return tp;
 	}
 	
+	/**
+	 * This is where the file the user inputted is then processed by our program.
+	 *
+	 * @param f the f
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws NoClassDefFoundError the no class def found error
+	 */
 	@SuppressWarnings("rawtypes")
 	private void processFile(File f) throws FileNotFoundException, IOException, ClassNotFoundException, NoClassDefFoundError {
 		JarInputStream input = new JarInputStream(new FileInputStream(f));
@@ -148,6 +164,7 @@ public class AppWindow extends Application {
 		// read contents of a jar file
 		while (next != null) {
 			if (next.getName().endsWith(".class")) {
+				counter++; // Counter 
 				String name = next.getName().replaceAll("/", "\\.");
 				name = name.replaceAll(".class", "");
 				if (!name.contains("$"))
@@ -174,5 +191,6 @@ public class AppWindow extends Application {
 			next = input.getNextJarEntry();
 		}
 		input.close();
+		System.out.println("The number of classes in JAR file "+ f.getName() + " is: " + counter);
 	}
 }
